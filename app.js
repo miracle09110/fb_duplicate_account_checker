@@ -15,7 +15,7 @@ const femaleDefaultDP ="https://scontent.fmnl8-1.fna.fbcdn.net/v/t1.30497-1/c141
 
     await page.$eval('input[name=email]', (el) => (el.value = ``));//TODO: ADD FB USER NAME
     await page.$eval('input[name=pass]', (el) => (el.value = ``)); //TODO: ADD FB PASSWORD
-     await page.screenshot({ path: './screenshots/creds.png' });
+    await page.screenshot({ path: './screenshots/creds.png' });
     await page.waitFor('input[type="submit"]');
     await page.click('input[type="submit"]');
     await page.waitForNavigation({ waitUntil: 'networkidle2' }),
@@ -25,10 +25,10 @@ const femaleDefaultDP ="https://scontent.fmnl8-1.fna.fbcdn.net/v/t1.30497-1/c141
     await page.click('input[placeholder="Search Facebook"]');
     await page.screenshot({ path: './screenshots/clicksearch.png' });
 
-    const keywords = '' //TODO: add keywords
+    const keywords = `` //TODO: add keywords
     await page.screenshot({ path: './screenshots/search.png' });
     console.log('Searching...');
-    await page.goto(`https://www.facebook.com/search/people/?q=${keywords.toLocaleLowerCase().replace(' ','%20')}`);
+    await page.goto(`https://www.facebook.com/search/people/?q=${keywords.toLowerCase().replace(' ','%20')}`);
     await page.screenshot({ path: './screenshots/searchresult.png' });
 
     
@@ -70,7 +70,7 @@ const femaleDefaultDP ="https://scontent.fmnl8-1.fna.fbcdn.net/v/t1.30497-1/c141
     console.log(`Account Links Found ${hrefs.length}`);
     const filter = async (links) => {
       const possibleNewAccounts = await links.reduce((array, link) => {
-        if (link.includes`${keywords.toLocaleLowerCase().replace(' ', '.')}.`) {
+        if (link.includes`${keywords.toLowerCase().replace(' ', '.')}.`) {
           array.push(link);
         }
         return array;

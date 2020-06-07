@@ -70,7 +70,7 @@ const femaleDefaultDP ="https://scontent.fmnl8-1.fna.fbcdn.net/v/t1.30497-1/c141
     console.log(`Account Links Found ${hrefs.length}`);
     const filter = async (links) => {
       const possibleNewAccounts = await links.reduce((array, link) => {
-        if (link.includes`${keywords.toLowerCase().replace(' ', '.')}.`) {
+        if (link.includes(`${keywords.toLowerCase().replace(' ', '.')}.`)) {
           array.push(link);
         }
         return array;

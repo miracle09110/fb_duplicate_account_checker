@@ -5,9 +5,10 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "compile" : "pkg --out-path dist app.js",
-    "compile-host" : "pkg -t host --out-path dist app.js",
-    "compile-full": "pkg --out-path dist app.js && xcopy node_modules\\puppeteer\\.local-chromium dist\\puppeteer /E/H" 
+    "compile-pkg" : "pkg --out-path dist app.js",
+    "compile-pkg-host" : "pkg -t host --out-path dist app.js",
+    "compile-pkg-full": "pkg --out-path dist app.js && cp -R node_modules/puppeteer/.local-chromium dist/puppeteer",
+    "compile-nexe": "mkdir dist-nexe && nexe app.js -o dist-nexe/fb_duplicate_account_checker && cp -R node_modules dist-nexe/"
   },
   "author": "",
   "license": "ISC",

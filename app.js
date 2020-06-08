@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 
 const maleDefaultDP = "https://scontent.fmnl8-1.fna.fbcdn.net/v/t1.30497-1/c141.0.480.480a/p480x480/84241059_189132118950875_4138507100605120512_n.jpg?_nc_cat=1&_nc_sid=7206a8&_nc_eui2=AeEqI6OYmIGNlw0jTefaB4tmLYw35eBBIRQtjDfl4EEhFIMk82TpqAmmtsGfzNVsal4&_nc_ohc=-PIzNlCh8LAAX-uFxfQ&_nc_ht=scontent.fmnl8-1.fna&oh=a2db7c3764f2da46d4d107221bb531ea&oe=5F015488";
 const femaleDefaultDP ="https://scontent.fmnl8-1.fna.fbcdn.net/v/t1.30497-1/c141.0.480.480a/p480x480/84688533_170842440872810_7559275468982059008_n.jpg?_nc_cat=1&_nc_sid=7206a8&_nc_eui2=AeGwxdpAns8Ea9jYvh83QQznwBqKCN3Pzv_AGooI3c_O_8_3X9jOsKLqrUS0inksEOo&_nc_ohc=PgSc7iSS3nUAX95o3Ar&_nc_ht=scontent.fmnl8-1.fna&oh=2d21dcb6cf79776aa92efe5316a0dfd3&oe=5F023B58";
-
+const numberOfScrollIterations = 2000; //TODO: Change as needed
 (async () => {
   console.log('Preparing FB Dummy Checker...');
    const browser = await puppeteer.launch();
@@ -25,7 +25,7 @@ const femaleDefaultDP ="https://scontent.fmnl8-1.fna.fbcdn.net/v/t1.30497-1/c141
     await page.click('input[placeholder="Search Facebook"]');
     await page.screenshot({ path: './screenshots/clicksearch.png' });
 
-    const keywords = `` //TODO: add keywords
+    const keywords = ``; //TODO: add keywords
     await page.screenshot({ path: './screenshots/search.png' });
     console.log('Searching...');
     await page.goto(`https://www.facebook.com/search/people/?q=${keywords.toLowerCase().replace(' ','%20')}`);
@@ -42,7 +42,7 @@ const femaleDefaultDP ="https://scontent.fmnl8-1.fna.fbcdn.net/v/t1.30497-1/c141
         });
 
         console.log('Loading....');
-        await page.screenshot({ path: `./screenshots/scroll${iterator}.png` });
+        // await page.screenshot({ path: `./screenshots/scroll${iterator}.png` });
 
         const spanTexts = await page.evaluate(() =>
           Array.from(document.body.querySelectorAll('span'), (el) => {
@@ -51,7 +51,7 @@ const femaleDefaultDP ="https://scontent.fmnl8-1.fna.fbcdn.net/v/t1.30497-1/c141
         );
 
         console.log(`Info gathered: ${spanTexts.length}`);
-        if (spanTexts.indexOf('End of Results') > -1 || iterator === 50) {
+        if (spanTexts.indexOf('End of Results') > -1 || iterator === numberOfScrollIterations) {
           console.log('End of Search Results');
           keepScrolling = false;
           return;

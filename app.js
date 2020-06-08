@@ -94,7 +94,7 @@ console.log(' *** Whatever happens with us, stays with us ***');
 
   try {
       await page.goto('https://facebook.com');
-      await page.screenshot({ path: './screenshots/page.png' });
+      // await page.screenshot({ path: './screenshots/page.png' });
       await page.waitFor('input[name=email]');
       await page.waitFor('input[name=pass]');
       await page.evaluate((username) => {
@@ -107,8 +107,8 @@ console.log(' *** Whatever happens with us, stays with us ***');
 
       await page.waitFor('input[type="submit"]');
       await page.click('input[type="submit"]');
-      await page.waitForNavigation({ waitUntil: 'networkidle2' }),
-      await page.screenshot({ path: './screenshots/login.png' });
+      await page.waitForNavigation({ waitUntil: 'networkidle2' })
+      // await page.screenshot({ path: './screenshots/login.png' });
   }catch (err){
     console.log(`Something went wrong in logging your account`);
     await browser.close();
@@ -125,7 +125,7 @@ while (searchAgain || !rerun) {
   try {    
     console.log(`Searching for ${keywords}...`);
     await page.goto(`https://www.facebook.com/search/people/?q=${keywords.toLowerCase().replace(' ','%20')}`);
-    await page.screenshot({ path: './screenshots/searchresult.png' });
+    // await page.screenshot({ path: './screenshots/searchresult.png' });
 
     
     const scrolldown = async () => {

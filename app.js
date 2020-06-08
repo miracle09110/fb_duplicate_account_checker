@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
 const prompts = require('prompts');
+const path = require('path');
 
 const maleDefaultDP = "https://scontent.fmnl8-1.fna.fbcdn.net/v/t1.30497-1/c141.0.480.480a/p480x480/84241059_189132118950875_4138507100605120512_n.jpg?_nc_cat=1&_nc_sid=7206a8&_nc_eui2=AeEqI6OYmIGNlw0jTefaB4tmLYw35eBBIRQtjDfl4EEhFIMk82TpqAmmtsGfzNVsal4&_nc_ohc=-PIzNlCh8LAAX-uFxfQ&_nc_ht=scontent.fmnl8-1.fna&oh=a2db7c3764f2da46d4d107221bb531ea&oe=5F015488";
 const femaleDefaultDP ="https://scontent.fmnl8-1.fna.fbcdn.net/v/t1.30497-1/c141.0.480.480a/p480x480/84688533_170842440872810_7559275468982059008_n.jpg?_nc_cat=1&_nc_sid=7206a8&_nc_eui2=AeGwxdpAns8Ea9jYvh83QQznwBqKCN3Pzv_AGooI3c_O_8_3X9jOsKLqrUS0inksEOo&_nc_ohc=PgSc7iSS3nUAX95o3Ar&_nc_ht=scontent.fmnl8-1.fna&oh=2d21dcb6cf79776aa92efe5316a0dfd3&oe=5F023B58";
@@ -58,6 +59,18 @@ console.log(' *** Whatever happens with us, stays with us ***');
 
 
 (async () => {
+  // https://github.com/vercel/pkg/issues/204
+  const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH ||
+    (process.pkg
+      ? path.join(
+          path.dirname(process.execPath),
+          'puppeteer',
+          ...puppeteer
+            .executablePath()
+            .split(path.sep)
+            .slice(6), 
+        )
+      : puppeteer.executablePath());
 
   const answers = await prompts(properties, {
     onCancel: () => { return 0 } 
@@ -70,7 +83,13 @@ console.log(' *** Whatever happens with us, stays with us ***');
     return;
   }
   console.log('Preparing FB Dummy Checker...');
-  const browser = await puppeteer.launch();
+
+
+
+  
+  const browser = await puppeteer.launch({
+    executablePath,
+  });
   const page = await browser.newPage();
 
   try {

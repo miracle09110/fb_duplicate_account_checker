@@ -28,7 +28,24 @@ node app.js
 ### Searching for friends' duplicate accounts
 Since this is loaded with your user credentials, you can search duplicates for your fb friends too. Simply change the `keyword` variable to the name of your friend
 
+### Preview
+#### Start 
+![Console App Preview](./assets/consoleapp.png)
+
+#### Sample Output
+```
+Here are possible duplicate accounts
+[
+
+  'https://web.facebook.com/justin.pabon.90',
+
+  'https://web.facebook.com/justin.pabon.568'
+
+]
+```
+
+
+
 #### Further improvements
 - UI
-- Environment variable based searching
 - Business logic for filtering actual vs fake accounts

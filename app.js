@@ -1,33 +1,110 @@
 const puppeteer = require('puppeteer');
+const prompts = require('prompts');
 
 const maleDefaultDP = "https://scontent.fmnl8-1.fna.fbcdn.net/v/t1.30497-1/c141.0.480.480a/p480x480/84241059_189132118950875_4138507100605120512_n.jpg?_nc_cat=1&_nc_sid=7206a8&_nc_eui2=AeEqI6OYmIGNlw0jTefaB4tmLYw35eBBIRQtjDfl4EEhFIMk82TpqAmmtsGfzNVsal4&_nc_ohc=-PIzNlCh8LAAX-uFxfQ&_nc_ht=scontent.fmnl8-1.fna&oh=a2db7c3764f2da46d4d107221bb531ea&oe=5F015488";
 const femaleDefaultDP ="https://scontent.fmnl8-1.fna.fbcdn.net/v/t1.30497-1/c141.0.480.480a/p480x480/84688533_170842440872810_7559275468982059008_n.jpg?_nc_cat=1&_nc_sid=7206a8&_nc_eui2=AeGwxdpAns8Ea9jYvh83QQznwBqKCN3Pzv_AGooI3c_O_8_3X9jOsKLqrUS0inksEOo&_nc_ohc=PgSc7iSS3nUAX95o3Ar&_nc_ht=scontent.fmnl8-1.fna&oh=2d21dcb6cf79776aa92efe5316a0dfd3&oe=5F023B58";
+
+const properties = [
+  {
+    type: 'text',
+    name: 'username',
+    message: `What's facebook user?`,
+    validate: (value) => (!value ? `Please input user` : true),
+  },
+  {
+    type: 'password',
+    name: 'password',
+    message: `FB password (This will not leave your local machine)`,
+    validate: (value) => (!value ? `Please input password` : true),
+  },
+  {
+    type: 'text',
+    name: 'search',
+    message: `Name to search (separate with spaces)`,
+    validate: value => value.split(' ').length <= 1 ?  'Please input name to search with spaces' : true
+  },
+];
+
+let username = ''
+let password = '';
+let keywords = '' ; 
+let rerun = false;
+let searchAgain = false; 
+
 const numberOfScrollIterations = 2000; //TODO: Change as needed
+console.log(' *** HELLO! I AM THE FB DUPLICATE ACCOUNT DETECTOR AND I HATE TROLLS ***');
+console.log();
+console.log();
+console.log();
+console.log('*                     *');
+console.log(' *                   *');
+console.log('  *                 *');
+console.log('   *               *');
+console.log('    *             *');
+console.log('     *   *  *    *');
+console.log('****** ******** ******');
+console.log('       ********');
+console.log('****** ******** ******');
+console.log('     *          *');
+console.log('    *            *');
+console.log('   *              *');
+console.log('  *                *');
+console.log(' *                  *');
+console.log('*                    *');
+console.log();
+console.log();
+console.log(' *** I run purely on your Machine ***');
+console.log(' *** Whatever happens with us, stays with us ***');
+
+
 (async () => {
+
+  const answers = await prompts(properties, {
+    onCancel: () => { return 0 } 
+  });
+
+  username = answers.username;
+  password = answers.password;
+  keywords = answers.search;
+  if (!username || !password){
+    return;
+  }
   console.log('Preparing FB Dummy Checker...');
-   const browser = await puppeteer.launch();
-   const page = await browser.newPage();
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+
   try {
-    await page.goto('https://facebook.com');
-    await page.screenshot({ path: './screenshots/page.png' });
-    await page.waitFor('input[name=email]');
-    await page.waitFor('input[name=pass]');
+      await page.goto('https://facebook.com');
+      await page.screenshot({ path: './screenshots/page.png' });
+      await page.waitFor('input[name=email]');
+      await page.waitFor('input[name=pass]');
+      await page.evaluate((username) => {
+        document.querySelector('input[name=email]').value = username;
+      }, username); //TODO: ADD FB USER NAME
 
-    await page.$eval('input[name=email]', (el) => (el.value = ``));//TODO: ADD FB USER NAME
-    await page.$eval('input[name=pass]', (el) => (el.value = ``)); //TODO: ADD FB PASSWORD
-    await page.screenshot({ path: './screenshots/creds.png' });
-    await page.waitFor('input[type="submit"]');
-    await page.click('input[type="submit"]');
-    await page.waitForNavigation({ waitUntil: 'networkidle2' }),
-    await page.screenshot({ path: './screenshots/login.png' });
+      await page.evaluate((password) => {
+        document.querySelector('input[name=pass]').value = password;
+      }, password); //TODO: ADD FB USER NAME
 
-    await page.waitFor('input[placeholder="Search Facebook"]');
-    await page.click('input[placeholder="Search Facebook"]');
-    await page.screenshot({ path: './screenshots/clicksearch.png' });
+      await page.waitFor('input[type="submit"]');
+      await page.click('input[type="submit"]');
+      await page.waitForNavigation({ waitUntil: 'networkidle2' }),
+      await page.screenshot({ path: './screenshots/login.png' });
+  }catch (err){
+    console.log(`Something went wrong in logging your account`);
+    await browser.close();
+    return;
+  }
 
-    const keywords = ``; //TODO: add keywords
-    await page.screenshot({ path: './screenshots/search.png' });
-    console.log('Searching...');
+
+while (searchAgain || !rerun) {
+  if (rerun) {
+    const newSearch = await prompts(properties[2]);
+    keywords = newSearch.search;
+  
+  }
+  try {    
+    console.log(`Searching for ${keywords}...`);
     await page.goto(`https://www.facebook.com/search/people/?q=${keywords.toLowerCase().replace(' ','%20')}`);
     await page.screenshot({ path: './screenshots/searchresult.png' });
 
@@ -118,10 +195,27 @@ const numberOfScrollIterations = 2000; //TODO: Change as needed
     const dummies = await getPossibleDummy(filteredLinks);
     console.log(`Here are possible duplicate accounts`);
     console.log(dummies);
-    await browser.close();
+    
+    const again = await prompts({ 
+          type: 'confirm',
+          name: 'confirmed',
+          message: 'Search Again?'
+    });
+
+    searchAgain = again.confirmed;
+    console.log(`Searching Again ${searchAgain}`);
+    if (!searchAgain){
+      await browser.close();
+      return;
+    }
+    
+    rerun = true;
+
   }catch (err){
-    console.log(err);
+    console.log(`**** I\'m sorry I failed, please make sure you have the right credentials`);
     await browser.close();
+    return
   }
+}
  
 })();

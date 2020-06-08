@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "prompt": "^1.0.0",
+    "prompts": "^2.3.2",
     "puppeteer": "^3.3.0",
     "puppeteer-core": "^3.3.0"
   }

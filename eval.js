@@ -12,13 +12,12 @@ module.exports = {
   scrollFunc: () => {
     window.scrollBy(0, window.innerHeight);
   },
-  getAnchorFunc:() =>
-    Array.from(document.body.querySelectorAll('a'), (el) =>
-      el.getAttribute('href')
-    )
-  ,
-  getImgFunc: () =>
-      Array.from(document.body.querySelectorAll('img'), (el) => {
-        return el.getAttribute('src');
-    })
+  getAnchorFunc:() => {
+    let achors = [...document.querySelectorAll('a')]
+    return achors.map((link) => link.getAttribute('href'))
+  },
+  getImgFunc:() => {
+    let achors = [...document.querySelectorAll('img')]
+    return achors.map((link) => link.getAttribute('src'))
+  }
 };

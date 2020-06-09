@@ -9,7 +9,7 @@ const properties = [
   {
     type: 'text',
     name: 'username',
-    message: `What's facebook user?`,
+    message: `What's your facebook user?`,
     validate: (value) => (!value ? `Please input user` : true),
   },
   {

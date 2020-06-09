@@ -97,12 +97,12 @@ console.log(' *** Whatever happens with us, stays with us ***');
     // await page.screenshot({ path: './screenshots/page.png' });
     await page.waitFor('input[name=email]');
     await page.waitFor('input[name=pass]');
-    await page.evaluate(eval.parseStringFunc('EVAL_USERNAME'), username); //TODO: ADD FB USER NAME
-    await page.evaluate(eval.parseStringFunc('EVAL_PASSWORD'), password); //TODO: ADD FB USER NAME
+    await page.evaluate(eval.setUserfunc, username); //TODO: ADD FB USER NAME
+    await page.evaluate(eval.setPasswordfunc, password); //TODO: ADD FB USER NAME
+    // await page.screenshot({ path: './screenshots/login.png' });
     await page.waitFor('input[type="submit"]');
     await page.click('input[type="submit"]');
     await page.waitForNavigation({ waitUntil: 'networkidle2' })
-    // await page.screenshot({ path: './screenshots/login.png' });
   }catch (err){
     console.log(`Something went wrong in logging your account`);
     console.log('err (show me to the devs!):>> ', err);
@@ -128,12 +128,10 @@ while (searchAgain || !rerun) {
       let iterator = 0;
       while (keepScrolling) {
         console.log('Scrolling....');
-        await page.evaluate(eval.parseStringFunc('EVAL_WINDOW_SCROLL'));
+        await page.evaluate(eval.scrollFunc);
 
-        console.log('Loading....');
         // await page.screenshot({ path: `./screenshots/scroll${iterator}.png` });
-
-        const spanTexts = await page.evaluate(eval.parseStringFunc('EVAL_GET_SPANS'));
+        const spanTexts = await page.evaluate(eval.getSpanFunc);
 
         console.log(`Info gathered: ${spanTexts.length}`);
         if (spanTexts.indexOf('End of Results') > -1 || iterator === numberOfScrollIterations) {
@@ -146,7 +144,7 @@ while (searchAgain || !rerun) {
     }
   
     await scrolldown();
-    const hrefs = await page.evaluate(eval.parseStringFunc('EVAL_GET_HREFS'));
+    const hrefs = await page.evaluate(eval.getAnchorFunc);
 
     console.log(`Account Links Found ${hrefs.length}`);
     const filter = async (links) => {
@@ -170,9 +168,9 @@ while (searchAgain || !rerun) {
         console.log(`Checking ${link}...`);
         await page.goto(link);
 
-        const images = await page.evaluate(eval.parseStringFunc('EVAL_GET_SOURCES'));
+        const images = await page.evaluate(eval.getImgFunc);
 
-        const texts = await page.evaluate(eval.parseStringFunc('EVAL_GET_SPANS'));
+        const texts = await page.evaluate(eval.getSpanFunc);
 
         if (
           images.indexOf(femaleDefaultDP) > -1 ||

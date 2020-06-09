@@ -9,7 +9,7 @@ const properties = [
   {
     type: 'text',
     name: 'username',
-    message: `What's facebook user?`,
+    message: `FB Login Username/Email?`,
     validate: (value) => (!value ? `Please input user` : true),
   },
   {
@@ -21,7 +21,7 @@ const properties = [
   {
     type: 'text',
     name: 'search',
-    message: `Name to search (separate with spaces)`,
+    message: `Who would you like to scan for duplicates (doesn't have to be the owner of the FB account)\nFormat is firstname[space]lastname`,
     validate: value => value.split(' ').length <= 1 ?  'Please input name to search with spaces' : true
   },
 ];
@@ -56,7 +56,10 @@ console.log();
 console.log();
 console.log(' *** I run purely on your Machine ***');
 console.log(' *** Whatever happens with us, stays with us ***');
-
+console.log();
+console.log("NOTE: In order for you to use this tool, you'll have to use your facebook credentials. I'll use them to log in to facebook for you and run a search automatically.");
+console.log();
+console.log("Currently Two-Factor Authentication Incompatible. Make sure 2FA is disabled on the account you're using... or contact the devs to hook you up");
 
 (async () => {
   // https://github.com/vercel/pkg/issues/204

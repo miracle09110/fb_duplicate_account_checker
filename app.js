@@ -105,6 +105,7 @@ console.log(' *** Whatever happens with us, stays with us ***');
     // await page.screenshot({ path: './screenshots/login.png' });
   }catch (err){
     console.log(`Something went wrong in logging your account`);
+    console.log('err (show me to the devs!):>> ', err);
     await browser.close();
     return;
   }
@@ -208,6 +209,7 @@ while (searchAgain || !rerun) {
 
   }catch (err){
     console.log(`**** I\'m sorry I failed, please make sure you have the right credentials`);
+    console.log('err (show me to the devs!):>> ', err);
     await browser.close();
     return
   }
